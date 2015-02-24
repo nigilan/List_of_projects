@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+<title>AJAX-PHP-MYSQL-JSON-JQUERY</title>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+<script>
+  $(function() {
+    
+    function tableContentUpdater() {
+    var data = {
+      "action": "select"
+    };
+    
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "sample.php", 
+      data: data,
+      success: function(data) {
+        console.log(data);
+        $('.table_content').html("");
+        $('.table_content').html(data.status);
+      },
+      error:function(jqXHR){
+        //console.log(jqXHR);
+        alert(jqXHR.responseText);
+      } 
+    });
+      
+    }
+    tableContentUpdater();
+    $( "#add_row" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+    
+    $( "#update_row" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+    
+    
+    
+    
+    $( ".add_new_row" ).click(function() {
+      $( "#add_row" ).dialog( "open" );
+    });
+    
+    //Adding row into table
+    $( ".ajax_add" ).click(function() {
+     var id = $('.add_id').val();
+     var name = $('.add_name').val(); 
+     var age = $('.add_age').val(); 
+     var dept = $('.add_dept').val();
+      var data = {
+      "action": "add",
+      "id":id,
+      "name":name,
+      "age":age,
+      "dept":dept
+      //"jsonData":{"id":id}
+      };
+   // console.log(data);
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "sample.php", 
+      data: data,
+      success: function(data) {
+        //console.log(data.status);
+      //  $( "#add_row" ).dialog( "close" );
+        
+        alert("Row added Successfully!");
+          tableContentUpdater();
+      },
+      error:function(jqXHR){
+        //console.log(jqXHR);
+       // console.log('ERROR: ' + jqXHR.status);
+        alert(jqXHR.responseText);
+      } 
+    });
+    //Clearing out the fields
+    $('.add_id').val("");
+    $('.add_name').val("");
+    $('.add_age').val("");
+    $('.add_dept').val("");
+    });
+    //Adding a row to table ends above
+    
+    //Delete row code
+    $( document ).on('click',".delete_row",function() {
+     var id = $(this).data('id');
+    // var name = $(this).data('name'); 
+     //var age = $(this).data('age'); 
+     //var dept = $(this).data('dept');
+     console.log(id);
+     var data = {
+      "action": "delete",
+      "id":id
+     };
+    
+      $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "sample.php", 
+      data: data,
+      success: function(data) {
+        //console.log(data);
+        tableContentUpdater();
+      },
+      error:function(jqXHR){
+        //console.log(jqXHR);
+        alert(jqXHR.responseText);
+      } 
+      });
+        
+    });
+    //Delete row code ends above
+    //Update Row code dialog open
+    $( document ).on('click',".update_row",function() {
+     var id = $(this).data('id');
+     var name = $(this).data('name'); 
+     var age = $(this).data('age'); 
+     var dept = $(this).data('dept');
+     $('#update_row .update_id').val(id);
+     $('#update_row .update_name').val(name);
+     $('#update_row .update_age').val(age);
+     $('#update_row .update_dept').val(dept);
+     
+     $( "#update_row" ).dialog( "open" );
+    });
+    
+    
+    //Update Row Code Dialog Open ends above
+    
+    //Updating row into table
+    $( ".ajax_update" ).click(function() {
+     var id = $('#update_row .update_id').val();
+     var name = $('#update_row .update_name').val();
+     var age = $('#update_row .update_age').val();
+     var dept = $('#update_row .update_dept').val();
+      var data = {
+      "action": "update",
+      "id":id,
+      "name":name,
+      "age":age,
+      "dept":dept
+      };
+      $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "sample.php", 
+      data: data,
+      success: function(data) {
+        console.log(data.status);
+        $( "#update_row" ).dialog( "close" );
+        
+        alert("Row Updated Successfully!");
+        tableContentUpdater();
+      },
+      error:function(jqXHR){
+        //console.log(jqXHR);
+       // console.log('ERROR: ' + jqXHR.status);
+        alert(jqXHR.responseText);
+      } 
+    });
+    //Clearing out the fields
+     $('#update_row .update_id').val("");
+     $('#update_row .update_name').val("");
+     $('#update_row .update_age').val("");
+     $('#update_row .update_dept').val("");
+    });
+    //Updating a row to table ends above
+    var timeVar;
+    //Starts Polling
+    $( ".poll" ).click(function() {
+    console.log("JJJJJJJJ");
+    
+    timeVar = setInterval(function(){
+    
+     tableContentUpdater(); 
+    
+    
+    }, 5000);
+    
+    
+    // setTimeout(function(){
+     
+      //   tableContentUpdater(); 
+     //}, 3000);
+    
+    });
+    //COde for start poll ends
+    
+    //Stops Polling
+    $( ".stop" ).click(function() {
+     clearInterval(timeVar);
+    });
+    //COde for stop poll ends
+    
+    
+    
+  });
+  
+  </script>
+
+</head>
+
+<body border="2">
+<table>
+<thead>
+<tr>
+<th>Employee ID</th>
+<th>Employee Name</th>
+<th>Employee Age</th>
+<th>Dept</th>
+<th>Update</th>
+<th>Delete</th>
+</tr>
+</thead>
+<tbody class="table_content">
+</tbody>
+</table>
+<br/>
+<input type="button" class="add_new_row" value="Add Row">
+
+<div id="add_row" title="Add row">
+<table>
+<tr>
+<td>
+ID
+</td>
+<td>
+<input type="text" class="add_id">
+</td>
+</tr>
+<tr>
+<td>
+Name
+</td>
+<td>
+<input type="text" class="add_name">
+</td>
+</tr>
+<tr>
+<td>
+Age
+</td>
+<td>
+<input type="text" class="add_age">
+</td>
+</tr>
+<tr>
+<td>
+Dept
+</td>
+<td>
+<input type="text" class="add_dept">
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<input type="button" class="ajax_add" value="Add Row to DB">
+</td>
+</tr>
+</table>
+</div>
+
+
+<div id="update_row" title="Update row">
+<table>
+<tr>
+<td>
+ID
+</td>
+<td>
+<input type="text" readonly class="update_id">
+</td>
+</tr>
+<tr>
+<td>
+Name
+</td>
+<td>
+<input type="text" class="update_name">
+</td>
+</tr>
+<tr>
+<td>
+Age
+</td>
+<td>
+<input type="text" class="update_age">
+</td>
+</tr>
+<tr>
+<td>
+Dept
+</td>
+<td>
+<input type="text" class="update_dept">
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<input type="button" class="ajax_update" value="Update Row to DB">
+</td>
+</tr>
+</table>
+</div>
+<br/>
+
+<input type="button" value="Poll" class="poll">
+<br>
+<input type="button" value="Stop" class="stop">
+
+</body>
+
+</html>
+
