@@ -1,4 +1,5 @@
 <?php
+
 header('Content-type: application/json');
 
 $con=mysqli_connect("localhost","root","root");
