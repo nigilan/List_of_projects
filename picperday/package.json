@@ -1,0 +1,19 @@
+{
+  "name": "picperday",
+  "version": "1.0.0",
+  "description": "nasa pic of the day",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "nasa"
+  ],
+  "author": "nigilan",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "express": "^4.15.4",
+    "express-handlebars": "^3.0.0"
+  }
+}
