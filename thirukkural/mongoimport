@@ -1,0 +1,1 @@
+mongoimport --db test --collection test1 --drop --file mytkl.json --jsonArray
